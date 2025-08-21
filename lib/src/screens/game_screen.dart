@@ -61,38 +61,41 @@ class _GameScreenState extends State<GameScreen> {
                       return const SizedBox.shrink();
                     }
 
-                    return Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 6),
-                        padding: const EdgeInsets.all(12),
-                        constraints: const BoxConstraints(maxWidth: 680),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              latestAssistant.content,
-                              style: const TextStyle(fontSize: 16, height: 1.3),
-                            ),
-                            if (latestAssistant.choices.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  children: latestAssistant.choices
-                                      .map((c) => OutlinedButton(
-                                            onPressed: () => _send(c),
-                                            child: Text(c),
-                                          ))
-                                      .toList(),
-                                ),
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.zero,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          padding: const EdgeInsets.all(12),
+                          constraints: const BoxConstraints(maxWidth: 680),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                latestAssistant.content,
+                                style: const TextStyle(fontSize: 16, height: 1.3),
                               ),
-                          ],
+                              if (latestAssistant.choices.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Wrap(
+                                    spacing: 8,
+                                    runSpacing: 8,
+                                    children: latestAssistant.choices
+                                        .map((c) => OutlinedButton(
+                                              onPressed: () => _send(c),
+                                              child: Text(c),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     );
