@@ -14,19 +14,21 @@ class StoryAIResult {
 class OpenAIService {
   final String _apiBase = 'https://api.openai.com/v1/chat/completions';
 
-  String get _apiKey {
-    final key = dotenv.env['OPENAI_API_KEY'];
-    if (key == null || key.isEmpty) {
-      throw Exception('OPENAI_API_KEY가 설정되지 않았습니다. .env 파일을 확인하세요.');
-    }
-    return key;
-  }
+  bool get _hasApiKey => (dotenv.env['OPENAI_API_KEY']?.isNotEmpty ?? false);
+  String get _apiKey => dotenv.env['OPENAI_API_KEY'] ?? '';
 
   String get _model => dotenv.env['OPENAI_MODEL']?.trim().isNotEmpty == true
       ? dotenv.env['OPENAI_MODEL']!.trim()
       : 'gpt-4.1';
 
   Future<StoryAIResult> completeStory(List<GameMessage> history) async {
+    // 데모 모드: API 키가 없으면 빠른 로컬 응답을 생성해 테스트 가능하도록 처리
+    if (!_hasApiKey) {
+      final String lastUser = history.lastWhere((m) => m.role == 'user', orElse: () => GameMessage(role: 'user', content: '모험을 시작한다.')).content;
+      final String demoText = '데모 모드 응답입니다. 다음 입력을 바탕으로 이야기를 전개합니다:\n\n"${lastUser}"\n\n- 북쪽의 작은 마을에서 여정이 시작됩니다.\n- 여관 앞 광장에서 수상한 인물이 당신을 지켜봅니다.';
+      final List<String> demoChoices = ['광장으로 간다', '여관에 들어간다', '수상한 인물에게 다가간다'];
+      return StoryAIResult(text: demoText, choices: demoChoices);
+    }
     // GPT-4.1 모델 사용. 시스템 프롬프트 + 유저/어시스턴트 메세지 전달
     final messages = history
         .map((m) => {

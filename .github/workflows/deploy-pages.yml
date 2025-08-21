@@ -36,6 +36,9 @@ jobs:
       - name: Build Web (with base href for GitHub Pages)
         run: flutter build web --release --base-href /storyfantasyrpg/
 
+      - name: Copy 404.html for SPA routing
+        run: cp build/web/index.html build/web/404.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
